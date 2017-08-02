@@ -28,27 +28,20 @@ var board = new GrovePi.board({
 });
 board.init();
 
-var SongleWidget = require("songle-widget");
+var SW = require("songle-widget");
 
 // トークンの情報を取ってくる
 var settings = require("./settings");
 
-// Songle Widget IoMT APIのエンドポイント指定
-SongleWidget.System.defaultEndpointWebClientProtocol = "https:";
-SongleWidget.System.defaultEndpointWebClientHost = "api.songle.jp";
-SongleWidget.System.defaultEndpointWebSocketProtocol = "https:";
-SongleWidget.System.defaultEndpointWebSocketHost = "api.songle.jp";
-SongleWidget.System.showLogMode = true;
-
 // ビート情報と基本情報をもらってくる
-var player = new SongleWidget.Player({
+var player = new SW.Player({
     accessToken: settings.tokens.access
 });
-player.addPlugin(new SongleWidget.Plugin.Beat());
+player.addPlugin(new SW.Plugin.Beat());
 // player.addPlugin(new SongleWidget.Plugin.Chord());
 // player.addPlugin(new SongleWidget.Plugin.Melody());
 // player.addPlugin(new SongleWidget.Plugin.Chorus());
-player.addPlugin(new SongleWidget.Plugin.SongleSync());
+player.addPlugin(new SW.Plugin.SongleSync());
 
 // 何かあったらコンソールに書き出す
 player.on("play", (ev) => {

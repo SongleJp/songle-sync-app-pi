@@ -13,6 +13,6 @@
   "dependencies": {
     "@types/node": "^6.0.78",
     "node-grovepi": "^2.1.1",
-    "w3c-xmlhttprequest": "^2.1.2"
+    "songle-widget": "latest"
   }
 }

@@ -1,14 +1,21 @@
 # Songle Sync Raspberry Pi向けslaveプロジェクト
 
+Raspberry Piに接続されたLEDが拍に合わせて明滅し、4桁ディスプレイに再生時刻が表示されます。
+
+![Raspberry Pi + GrovePi](pi.jpg "Raspberry Pi + GrovePi")
+
+## 必要なハードウェア
+
+- [Raspberry Pi](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/) (3 Model Bで動作確認しています)
+- [GrovePi](https://www.dexterindustries.com/grovepi/) (Groveモジュールを繋ぐのに必要です)
+- [Grove 4-Digit Displayモジュール](http://wiki.seeed.cc/Grove-4-Digit_Display/) (再生時刻表示に使います; GrovePi D2ピンに挿します)
+- [Grove LEDモジュール](http://wiki.seeed.cc/Grove-LED_Socket_Kit/) (拍に合わせて明滅します; GrovePi D4ピンに挿します)
+
 ## 初期設定
 
-Raspberry Piの設定画面からホスト名を変えたりI2C通信を有効にしたりします。
+GrovePiを使うには [チュートリアル](https://www.dexterindustries.com/GrovePi/get-started-with-the-grovepi/) に従ってGrovePiのGitHubリポジトリをcloneしてスクリプトを実行する必要があります。ただ、セットアップがうまくいかないこともあるので、 [Raspbian for Robots](https://www.dexterindustries.com/howto/install-raspbian-for-robots-image-on-an-sd-card/) をSDカードに焼いて使うのが簡単です。
 
-```sh
-sudo raspi-config
-```
-
-5インチLCDディスプレイをつないだ場合はドライバをインストールする必要もあります。
+よく売られている5インチLCDディスプレイをつないだ場合はドライバをインストールする必要もあります。（公式の7インチはドライバなしで正しく表示されます。）
 
 ```sh
 git clone https://github.com/goodtft/LCD-show.git
@@ -21,29 +28,6 @@ Node.jsをインストールするには以下を実行します。
 ```sh
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt install nodejs
-```
-
-## 静的IPを設定する方法
-
-`/etc/network/interfaces.d/eth0` を作成し、以下のような内容にします。
-
-```sh
-auto eth0
-allow-hotplug eth0
-iface eth0 inet static
-address 192.168.3.107
-netmask 255.255.0.0
-gateway 192.168.1.1
-dns-nameservers 8.8.8.8 8.8.4.4
-```
-
-これでだめな場合は `/etc/dhcpcd.conf` の末尾に以下の記述を足します。
-
-```sh
-interface eth0
-static ip_address=192.168.3.106/16
-static routers=192.168.1.1
-static domain_name_servers=8.8.8.8 8.8.4.4
 ```
 
 ## 一般的な使い方説明
@@ -73,7 +57,7 @@ root@dex:/home/pi# i2cdetect -y 1
 `i2cdetect` の結果にGrovePiが表れない場合は、以下のコマンドを実行してGrovePiをリセットしてから再度試してください。
 
 ```sh
-avrdude -c gpio -p m328p
+$ avrdude -c gpio -p m328p
 ```
 
 なお、そもそもI2Cが有効になっていない場合は、以下のコマンドでRaspberry Piの設定画面を表示し、I2Cを有効にする必要があります。
