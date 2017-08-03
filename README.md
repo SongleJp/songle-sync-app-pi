@@ -3,9 +3,10 @@
 Raspberry PiのオンボードLEDが拍に合わせて明滅します。
 
 
-## 必要なハードウェア
+## 必要なもの
 
 - [Raspberry Pi](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/) (3 Model Bで動作確認しています)
+- [Songle API のアクセストークン](http://tutorial.songle.jp/sync/step3#register-app)
 
 ## 初期設定
 
@@ -15,6 +16,8 @@ Node.jsをインストールするには以下を実行します。
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt install nodejs
 ```
+
+次に、アクセストークンを[settings.js](https://github.com/SongleJp/songle-sync-app-pi/blob/master/settings.js) に設定します。
 
 ## 使い方
 
