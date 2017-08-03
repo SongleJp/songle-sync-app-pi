@@ -1,28 +1,23 @@
 // LEDをチカチカさせたい
-var GrovePi = require('node-grovepi').GrovePi, led, fdd, initialized = false, paused = true;
-var board = new GrovePi.board({
-    debug: true,
-    onError: function (err) {
-        console.log('Something wrong just happened');
-        console.log(err);
-    },
-    onInit: function (res) {
-        if (!res)
-            return;
-        var version = board.version();
-        console.log('GrovePi Version : ' + version);
-        if (!version) {
-            console.log('GrovePi is not connected.');
-            process.exit(1);
-        }
-        led = new GrovePi.sensors.DigitalOutput(2);
-        fdd = new GrovePi.sensors.FourDigitDigital(4);
-        fdd.init();
-        fdd.setBrightness(8);
-        initialized = true;
+var gpio = require("gpio");
+var Led = (function () {
+    function Led(gpio) {
+        this.gpio24 = gpio["export"](16, {
+            direction: "in",
+            ready: function () { }
+        });
     }
-});
-board.init();
+    Led.prototype.turnOn = function () {
+        this.gpio24.set(1);
+    };
+    Led.prototype.turnOff = function () {
+        this.gpio24.set(0);
+    };
+    return Led;
+}());
+var led = new Led(gpio);
+var initialized = false;
+var paused = true;
 var SW = require("songle-widget");
 // トークンの情報を取ってくる
 var settings = require("./settings");
@@ -46,7 +41,6 @@ player.on("pause", function (ev) {
     console.log("pause");
     if (initialized) {
         led.turnOff();
-        fdd.off();
     }
     on = false;
     paused = true;
@@ -56,7 +50,6 @@ player.on("finish", function (ev) {
     console.log("finish");
     if (initialized) {
         led.turnOff();
-        fdd.off();
     }
     on = false;
     paused = true;
@@ -77,12 +70,10 @@ player.on("beatEnter", function (ev) {
 setInterval(function () {
     if (initialized && player && !paused) {
         var position = Math.round(player.position) / 1000;
-        fdd.setScore(position / 60, position % 60);
     }
 }, 250);
 process.on('SIGTERM', function () {
     if (initialized) {
         led.turnOff();
-        fdd.off();
     }
 });

@@ -2,7 +2,7 @@
 
 module.exports = {
   tokens: {
-    access: "YOUR_ACCESS_TOKEN",
+    access: "0000000a-LPwFZzr",
     secret: "YOUR_SECRET_TOKEN"
   },
   default_tokens: [

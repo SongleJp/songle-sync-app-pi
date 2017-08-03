@@ -8,11 +8,10 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "dependencies": {
     "@types/node": "^6.0.78",
-    "node-grovepi": "^2.1.1",
+    "gpio": "^0.2.7",
     "songle-widget": "latest"
   }
 }

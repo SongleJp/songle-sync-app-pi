@@ -1,32 +1,30 @@
 // LEDをチカチカさせたい
-var GrovePi = require('node-grovepi').GrovePi
-    , led
-    , fdd
-    , initialized = false
-    , paused = true;
 
-var board = new GrovePi.board({
-    debug: true,
-    onError: function(err) {
-        console.log('Something wrong just happened');
-        console.log(err);
-    },
-    onInit: function(res) {
-        if (!res) return;
-        var version = board.version();
-        console.log('GrovePi Version : ' + version);
-        if (!version) {
-            console.log('GrovePi is not connected.');
-            process.exit(1);
-        }
-        led = new GrovePi.sensors.DigitalOutput(2);
-        fdd = new GrovePi.sensors.FourDigitDigital(4);
-        fdd.init();
-        fdd.setBrightness(8);
-        initialized = true;
+var gpio = require("gpio");
+
+class Led {
+    gpio16: any;
+
+    constructor(gpio) {
+        this.gpio16 = gpio.export(16, {
+            direction: "in",
+            ready: function() {}
+        });
     }
-});
-board.init();
+
+    turnOn() {
+        this.gpio16.set(1);
+    }
+
+    turnOff() {
+        this.gpio16.set(0);
+    }
+}
+
+const led = new Led(gpio);
+
+let initialized = false
+let paused = true;
 
 var SW = require("songle-widget");
 
@@ -38,9 +36,6 @@ var player = new SW.Player({
     accessToken: settings.tokens.access
 });
 player.addPlugin(new SW.Plugin.Beat());
-// player.addPlugin(new SongleWidget.Plugin.Chord());
-// player.addPlugin(new SongleWidget.Plugin.Melody());
-// player.addPlugin(new SongleWidget.Plugin.Chorus());
 player.addPlugin(new SW.Plugin.SongleSync());
 
 // 何かあったらコンソールに書き出す
@@ -55,7 +50,6 @@ player.on("pause", (ev) => {
     console.log("pause");
     if (initialized) {
         led.turnOff();
-        fdd.off();
     }
     on = false;
     paused = true;
@@ -66,7 +60,6 @@ player.on("finish", (ev) => {
     console.log("finish");
     if (initialized) {
         led.turnOff();
-        fdd.off();
     }
     on = false;
     paused = true;
@@ -87,13 +80,11 @@ player.on("beatEnter", (ev) => {
 setInterval(() => {
     if (initialized && player && !paused) {
         var position = Math.round(player.position) / 1000;
-        fdd.setScore(position / 60, position % 60);
     }
 }, 250);
 
 process.on('SIGTERM', function() {
     if (initialized) {
         led.turnOff();
-        fdd.off();
     }
 });
