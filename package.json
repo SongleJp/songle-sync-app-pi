@@ -12,6 +12,6 @@
   "dependencies": {
     "@types/node": "^6.0.78",
     "gpio": "^0.2.7",
-    "songle-widget": "latest"
+    "songle-widget": "^1.0.0"
   }
 }
