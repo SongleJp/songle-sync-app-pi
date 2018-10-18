@@ -8,7 +8,7 @@ class Led {
     constructor(gpio) {
         this.gpio16 = gpio.export(16, {
             direction: "in",
-            ready: function() {}
+            ready: function() { }
         });
     }
 
@@ -26,7 +26,7 @@ const led = new Led(gpio);
 let initialized = false
 let paused = true;
 
-var SW = require("songle-widget");
+var SW = require("songle-api");
 
 // トークンの情報を取ってくる
 var settings = require("./settings");

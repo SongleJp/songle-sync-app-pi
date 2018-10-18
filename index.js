@@ -1,24 +1,24 @@
 // LEDをチカチカさせたい
 var gpio = require("gpio");
-var Led = (function () {
+var Led = /** @class */ (function () {
     function Led(gpio) {
-        this.gpio24 = gpio["export"](16, {
+        this.gpio16 = gpio["export"](16, {
             direction: "in",
             ready: function () { }
         });
     }
     Led.prototype.turnOn = function () {
-        this.gpio24.set(1);
+        this.gpio16.set(1);
     };
     Led.prototype.turnOff = function () {
-        this.gpio24.set(0);
+        this.gpio16.set(0);
     };
     return Led;
 }());
 var led = new Led(gpio);
 var initialized = false;
 var paused = true;
-var SW = require("songle-widget");
+var SW = require("songle-api");
 // トークンの情報を取ってくる
 var settings = require("./settings");
 // ビート情報と基本情報をもらってくる
@@ -26,9 +26,6 @@ var player = new SW.Player({
     accessToken: settings.tokens.access
 });
 player.addPlugin(new SW.Plugin.Beat());
-// player.addPlugin(new SongleWidget.Plugin.Chord());
-// player.addPlugin(new SongleWidget.Plugin.Melody());
-// player.addPlugin(new SongleWidget.Plugin.Chorus());
 player.addPlugin(new SW.Plugin.SongleSync());
 // 何かあったらコンソールに書き出す
 player.on("play", function (ev) {
